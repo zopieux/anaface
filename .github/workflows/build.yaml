@@ -25,3 +25,33 @@ jobs:
           ./venv/bin/pip install -e .
       - name: Test
         run: ./venv/bin/python -m pytest
+
+  release:
+    if: startsWith(github.event.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    needs: [test]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: 'true'
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install
+        run: |
+          python -m venv venv
+          ./venv/bin/pip install hatch
+      - name: Build
+        run: ./venv/bin/python -m hatch build
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          fail_on_unmatched_files: true
+          files: dist/*
