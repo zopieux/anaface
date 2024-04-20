@@ -1,0 +1,30 @@
+[project]
+name = "anaface"
+version = "1.0.0"
+description = "Face detection and recognition using onnxruntime."
+authors = [
+    { name = "Alexandre Macabies", email = "web+oss@zopieux.com" }
+]
+license = "MIT"
+dependencies = [
+    "numpy",
+    "onnx",
+    "onnxruntime",
+    "opencv-python",
+    "scikit-image",
+]
+readme = "README.md"
+requires-python = ">= 3.10"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/anaface"]
+
+[tool.hatch.envs.hatch-test]
+default-args = ["tests"]
